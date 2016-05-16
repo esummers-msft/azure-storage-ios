@@ -902,6 +902,7 @@
 		BE4510641A9D252300C3F971 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Azure_Storage_Client_Library.dst;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -925,6 +926,7 @@
 		BE4510651A9D252300C3F971 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DSTROOT = /tmp/Azure_Storage_Client_Library.dst;
