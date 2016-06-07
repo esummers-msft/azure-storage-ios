@@ -22,14 +22,17 @@
 
 // Miscellaneous
 FOUNDATION_EXPORT NSString *const AZSCBlob;
+FOUNDATION_EXPORT NSString *const AZSCCode;
 FOUNDATION_EXPORT NSString *const AZSCContainer;
 FOUNDATION_EXPORT NSString *const AZSCDateFormatColloquial;
 FOUNDATION_EXPORT NSString *const AZSCDateFormatIso8601;
+FOUNDATION_EXPORT NSString *const AZSCDateFormatIso8601Lite;
 FOUNDATION_EXPORT NSString *const AZSCDateFormatRFC;
-FOUNDATION_EXPORT NSString *const AZSCDateFormatRoundtrip;
 FOUNDATION_EXPORT NSString *const AZSCDefaultDirectoryDelimiter;
 FOUNDATION_EXPORT NSString *const AZSCDefaultSuffix;
+FOUNDATION_EXPORT NSString *const AZSCDateTicksTemplate;
 FOUNDATION_EXPORT NSString *const AZSCEmptyString;
+FOUNDATION_EXPORT NSString *const AZSCFalse;
 FOUNDATION_EXPORT NSString *const AZSCHttp;
 FOUNDATION_EXPORT NSString *const AZSCHttps;
 FOUNDATION_EXPORT NSString *const AZSCHttpStatusCode;
@@ -38,10 +41,17 @@ FOUNDATION_EXPORT NSString *const AZSCRawErrorData;
 FOUNDATION_EXPORT NSString *const AZSCTargetStorageVersion;
 FOUNDATION_EXPORT NSString *const AZSCTrue;
 FOUNDATION_EXPORT NSString *const AZSCUtc;
+FOUNDATION_EXPORT NSString *const AZSCVoid;
 FOUNDATION_EXPORT NSString *const AZSCBlobAppendBlob;
 FOUNDATION_EXPORT NSString *const AZSCBlobBlockBlob;
 FOUNDATION_EXPORT NSString *const AZSCBlobPageBlob;
+FOUNDATION_EXPORT NSString *const AZSCTableEntityEtag;
+FOUNDATION_EXPORT NSString *const AZSCTableEntityTimestamp;
+FOUNDATION_EXPORT NSString *const AZSCTableEntityProperties;
+FOUNDATION_EXPORT NSString *const AZSCTableEntityPartitionKey;
+FOUNDATION_EXPORT NSString *const AZSCTableEntityRowKey;
 
+FOUNDATION_EXPORT double const AZSCDateAccuracyDelta;
 FOUNDATION_EXPORT NSInteger const AZSCKilobyte;
 FOUNDATION_EXPORT NSInteger const AZSCMaxBlockSize;
 FOUNDATION_EXPORT NSInteger const AZSCSnapshotIndex;

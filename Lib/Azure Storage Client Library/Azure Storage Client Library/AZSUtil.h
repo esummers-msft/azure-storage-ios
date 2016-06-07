@@ -32,9 +32,10 @@
 +(void) addOptionalHeaderToRequest:(NSMutableURLRequest *)request header:(NSString *)header intValue:(NSNumber *)value;
 
 +(NSDateFormatter *) dateFormatterWithRFCFormat;
-+(NSDateFormatter *) dateFormatterWithRoundtripFormat;
++(NSDate *) dateFromRoundtripFormat:(NSString *)string;
 
 +(NSString *) convertDateToHttpString:(NSDate *)date;
++(NSString *) convertDateToRoundtripFormat:(NSDate *)date;
 +(BOOL)streamAvailable:(NSStream *)stream;
 
 +(NSMutableDictionary *) parseQueryWithQueryString:(NSString *)query;

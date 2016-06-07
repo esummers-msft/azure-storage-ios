@@ -545,11 +545,11 @@
         {
             if ([currentNode isEqualToString:AZSCXmlStart])
             {
-                currentStoredPolicy.sharedAccessStartTime = [[AZSUtil dateFormatterWithRoundtripFormat] dateFromString:currentXmlText];
+                currentStoredPolicy.sharedAccessStartTime = [AZSUtil dateFromRoundtripFormat:currentXmlText];
             }
             else if ([currentNode isEqualToString:AZSCXmlExpiry])
             {
-                NSDate *date = [[AZSUtil dateFormatterWithRoundtripFormat] dateFromString:currentXmlText];
+                NSDate *date = [AZSUtil dateFromRoundtripFormat:currentXmlText];
                 currentStoredPolicy.sharedAccessExpiryTime = date;
             }
             else if ([currentNode isEqualToString:AZSCXmlPermission])
@@ -821,7 +821,7 @@
         
         if (copyCompletionTimeString)
         {
-            result.completionTime = [[AZSUtil dateFormatterWithRoundtripFormat] dateFromString:copyCompletionTimeString];
+            result.completionTime = [AZSUtil dateFromRoundtripFormat:copyCompletionTimeString];
         }
     }
     

@@ -17,6 +17,8 @@
 
 #import <Foundation/Foundation.h>
 
+// TODO: Split into two files: public constants (documented) and private constants (undocumented)
+
 /** The different Storage Locations */
 typedef NS_ENUM(NSInteger, AZSStorageLocation)
 {
@@ -241,6 +243,20 @@ typedef NS_ENUM(NSInteger, AZSCopyStatus)
     AZSCopyStatusFailed
 };
 
+/** Represents the EDM type of the entity property. */
+typedef NS_ENUM(NSInteger, AZSEdmType)
+{
+    AZSEdmUnknown,
+    AZSEdmBinary,
+    AZSEdmBoolean,
+    AZSEdmDateTime,
+    AZSEdmDouble,
+    AZSEdmGuid,
+    AZSEdmInt32,
+    AZSEdmInt64,
+    AZSEdmString
+};
+    
 /** Represents the lease action being performed. */
 typedef NS_ENUM(NSInteger, AZSLeaseAction)
 {

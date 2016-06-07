@@ -42,6 +42,7 @@
 #import "AZSCopyState.h"
 #import "AZSBlobOutputStream.h"
 #import "AZSCloudBlobDirectory.h"
+#import "AZSDynamicTableEntity.h"
 
 // TODO: Import all the user-accessible headers, so that users only need to import this one header file.
 @interface AZSClient : NSObject

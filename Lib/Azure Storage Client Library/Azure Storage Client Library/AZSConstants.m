@@ -22,14 +22,17 @@
 
 // Miscellaneous
 NSString *const AZSCBlob = @"blob";
+NSString *const AZSCCode = @"code";
 NSString *const AZSCContainer = @"container";
 NSString *const AZSCDateFormatColloquial = @"%a, %d %b %Y %T GMT";
 NSString *const AZSCDateFormatIso8601 = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
+NSString *const AZSCDateFormatIso8601Lite = @"yyyy-MM-dd'T'HH:mm:ss";
 NSString *const AZSCDateFormatRFC = @"EEE, dd MMM yyyy HH':'mm':'ss 'GMT'";
-NSString *const AZSCDateFormatRoundtrip = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSSSSS'Z'";
 NSString *const AZSCDefaultDirectoryDelimiter = @"/";
 NSString *const AZSCDefaultSuffix = @"core.windows.net";
+NSString *const AZSCDateTicksTemplate = @"%@.%07lldZ";
 NSString *const AZSCEmptyString = @"";
+NSString *const AZSCFalse = @"false";
 NSString *const AZSCHttp = @"http";
 NSString *const AZSCHttps = @"https";
 NSString *const AZSCHttpStatusCode = @"HTTP Status Code";
@@ -38,10 +41,17 @@ NSString *const AZSCRawErrorData = @"rawErrorData";
 NSString *const AZSCTargetStorageVersion = @"2015-04-05";
 NSString *const AZSCTrue = @"true";
 NSString *const AZSCUtc = @"UTC";
+NSString *const AZSCVoid = @"void";
 NSString *const AZSCBlobAppendBlob = @"AppendBlob";
 NSString *const AZSCBlobBlockBlob = @"BlockBlob";
 NSString *const AZSCBlobPageBlob = @"PageBlob";
+NSString *const AZSCTableEntityEtag = @"AZSCTableEntityEtag";
+NSString *const AZSCTableEntityTimestamp = @"AZSCTableEntityTimestamp";
+NSString *const AZSCTableEntityProperties = @"AZSCTableEntityProperties";
+NSString *const AZSCTableEntityPartitionKey = @"PartitionKey";
+NSString *const AZSCTableEntityRowKey = @"RowKey";
 
+double const AZSCDateAccuracyDelta = .0000002;
 NSInteger const AZSCKilobyte = 1024;
 NSInteger const AZSCMaxBlockSize = 4 * AZSCKilobyte * AZSCKilobyte;
 NSInteger const AZSCSnapshotIndex = 2;

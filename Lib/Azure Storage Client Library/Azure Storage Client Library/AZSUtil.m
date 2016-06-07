@@ -57,24 +57,52 @@
 
 +(NSString *) convertDateToHttpString:(NSDate *)date
 {
-    if (date)
-    {
-        return [[AZSUtil dateFormatterWithRFCFormat] stringFromDate:date];
-    }
-    else
-    {
+    if (!date) {
         return nil;
     }
+    
+    return [[AZSUtil dateFormatterWithRFCFormat] stringFromDate:date];
+}
+
++(NSString *) convertDateToRoundtripFormat:(NSDate *)date
+{
+    if (!date) {
+        return nil;
+    }
+    
+    // Extract the subsecond ticks
+    int64_t ticks = fabs(round(fmod(date.timeIntervalSinceReferenceDate, 1.0) * 10000000));
+    
+    // Extract the integer component
+    date = [NSDate dateWithTimeIntervalSinceReferenceDate:((int64_t) date.timeIntervalSinceReferenceDate)];
+    NSString *seconds = [[AZSUtil dateFormatterWithFormat:AZSCDateFormatIso8601Lite] stringFromDate:date];
+    
+    // Recombine
+    return [NSString stringWithFormat:AZSCDateTicksTemplate, seconds, ticks];
+}
+
++(NSDate *) dateFromRoundtripFormat:(NSString *)string
+{
+    if (!string || ![string containsString:@"."]) {
+        return nil;
+    }
+    
+    NSArray *components = [string componentsSeparatedByString:@"."];
+    
+    // Extract the integer component
+    NSDate *seconds = [[AZSUtil dateFormatterWithFormat:AZSCDateFormatIso8601Lite] dateFromString:components[0]];
+    
+    // Extract the subsecond ticks and ensure proper sign is used
+    double ticks = [[@"0." stringByAppendingString:components[1]] doubleValue];
+    ticks *= (seconds.timeIntervalSinceReferenceDate < 0) ? -1 : 1;
+    
+    // Recombine
+    return [NSDate dateWithTimeInterval:ticks sinceDate:seconds];
 }
 
 +(NSDateFormatter *) dateFormatterWithRFCFormat
 {
     return [AZSUtil dateFormatterWithFormat:AZSCDateFormatRFC];
-}
-
-+(NSDateFormatter *) dateFormatterWithRoundtripFormat
-{
-    return [AZSUtil dateFormatterWithFormat:AZSCDateFormatRoundtrip];
 }
 
 +(NSString *) utcTimeOrEmptyWithDate:(NSDate *)date
