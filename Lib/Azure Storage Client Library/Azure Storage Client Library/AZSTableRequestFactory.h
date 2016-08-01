@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------------------
-// <copyright file="AZSCoder.h" company="Microsoft">
-//    Copyright 2016 Microsoft Corporation
+// <copyright file="AZSTableRequestFactory.h" company="Microsoft">
+//    Copyright 2015 Microsoft Corporation
 //
 //    Licensed under the MIT License;
 //    you may not use this file except in compliance with the License.
@@ -17,23 +17,18 @@
 
 #import <Foundation/Foundation.h>
 #import "AZSEnums.h"
-#import "AZSMacros.h"
+#import "AZSULLRange.h"
+@class AZSOperationContext;
+@class AZSRequestResult;
+@class AZSAccessCondition;
+@class AZSContinuationToken;
+@class AZSTableProperties;
+@class AZSCopyState;
 
-@interface AZSCoder : NSCoder
+@interface AZSTableRequestFactory : NSObject
 
-@property(strong, readonly) NSError *codingError;
 
-/** Conditionally encodes a reference to the object and associates it with the
- key only if the object was previously or is later encoded unconditionally.
- Note: The object's isEqual: method is used to determine whether it has been
- encoded unconditionally.
- 
- @param object The object to conditionally encode.
- @param key The key to associate object with.
- */
--(void)encodeConditionalObject:(id)object forKey:(NSString *)key;
-
--(instancetype)init;
--(instancetype)initWithJsonDictionary:(NSDictionary *)dict AZS_DESIGNATED_INITIALIZER;
++(NSMutableURLRequest *) insertTableEntity:(id<NSCoding>)entity AccessCondition:(AZSAccessCondition *)accessCondition urlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout;
++(NSMutableURLRequest *) retrieveTableEntityWithPartitionKey:(NSString *)partitionKey rowKey:(NSString *)rowKey accessCondition:(AZSAccessCondition *)accessCondition urlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout;
 
 @end

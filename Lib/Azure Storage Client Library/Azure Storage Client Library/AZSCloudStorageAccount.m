@@ -20,6 +20,7 @@
 #import "AZSConstants.h"
 #import "AZSCloudStorageAccount.h"
 #import "AZSCloudBlobClient.h"
+#import "AZSCloudTableClient.h"
 #import "AZSOperationContext.h"
 #import "AZSSharedAccessSignatureHelper.h"
 #import "AZSStorageUri.h"
@@ -31,6 +32,7 @@
 
 @property (strong) AZSStorageCredentials *storageCredentials;
 @property (strong) AZSStorageUri *blob_endpoint;
+@property (strong) AZSStorageUri *table_endpoint;
 @property (strong, readonly) NSString *connectionString;
 @property (strong) NSString *endpointSuffix;
 @property BOOL explicitEndpoints;
@@ -170,6 +172,7 @@
     {
         _storageCredentials = storageCredentials;
         _blob_endpoint = blobEndpoint;
+        _table_endpoint = tableEndpoint;
         _explicitEndpoints = YES;
     }
     
@@ -198,6 +201,7 @@
         _storageCredentials = storageCredentials;
         _endpointSuffix = [endpointSuffix isEqualToString:AZSCDefaultSuffix] ? nil : endpointSuffix;
         _blob_endpoint = [self constructDefaultEndpointWithScheme:(useHttps ? AZSCHttps : AZSCHttp) hostnamePrefix:AZSCBlob endpointSuffix:endpointSuffix];
+        _table_endpoint = [self constructDefaultEndpointWithScheme:(useHttps ? AZSCHttps : AZSCHttp) hostnamePrefix:AZSCTable endpointSuffix:endpointSuffix];
         _explicitEndpoints = NO;
         _useHttps = useHttps;
     }
@@ -208,6 +212,11 @@
 -(AZSCloudBlobClient *) getBlobClient
 {
     return [[AZSCloudBlobClient alloc] initWithStorageUri:self.blob_endpoint credentials:self.storageCredentials];
+}
+
+-(AZSCloudTableClient *)getTableClient
+{
+    return [[AZSCloudTableClient alloc] initWithStorageUri:self.table_endpoint credentials:self.storageCredentials];
 }
 
 - (NSString *) createSharedAccessSignatureWithParameters:(AZSSharedAccessAccountParameters *)parameters error:(NSError **)error

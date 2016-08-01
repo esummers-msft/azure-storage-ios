@@ -22,6 +22,7 @@
 
 // Miscellaneous
 NSString *const AZSCBlob = @"blob";
+NSString *const AZSCTable = @"table";
 NSString *const AZSCCode = @"code";
 NSString *const AZSCContainer = @"container";
 NSString *const AZSCDateFormatColloquial = @"%a, %d %b %Y %T GMT";
@@ -48,6 +49,7 @@ NSString *const AZSCBlobPageBlob = @"PageBlob";
 NSString *const AZSCTableEntityEtag = @"AZSCTableEntityEtag";
 NSString *const AZSCTableEntityTimestamp = @"AZSCTableEntityTimestamp";
 NSString *const AZSCTableEntityProperties = @"AZSCTableEntityProperties";
+NSString *const AZSCTableEntityPropertiesInternal = @"AZSCTableEntityPropertiesInternal";
 NSString *const AZSCTableEntityPartitionKey = @"PartitionKey";
 NSString *const AZSCTableEntityRowKey = @"RowKey";
 
@@ -71,6 +73,7 @@ NSString *const AZSCEmulatorAccount = @"devstoraccount1";
 NSString *const AZSCEmulatorAccountKey = @"Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==";
 
 // Headers
+NSString *const AZSCAccept = @"Accept";
 NSString *const AZSCContentCacheControl = @"Cache-Control";
 NSString *const AZSCContentDisposition = @"Content-Disposition";
 NSString *const AZSCContentEncoding = @"Content-Encoding";
@@ -162,6 +165,7 @@ NSString *const AZSCHeaderValueUpdate = @"update";
 NSString *const AZSCHttpDelete = @"DELETE";
 NSString *const AZSCHttpHead = @"HEAD";
 NSString *const AZSCHttpGet = @"GET";
+NSString *const AZSCHttpPost = @"POST";
 NSString *const AZSCHttpPut = @"PUT";
 
 // Query Parameters

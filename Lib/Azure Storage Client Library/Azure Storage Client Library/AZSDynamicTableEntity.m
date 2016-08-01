@@ -50,11 +50,23 @@
 {
     self = [super init];
     if (self) {
-        _partitionKey = [decoder decodeObjectForKey:AZSCTableEntityPartitionKey];
-        _rowKey = [decoder decodeObjectForKey:AZSCTableEntityRowKey];
+        if ([decoder containsValueForKey:AZSCTableEntityPartitionKey]) {
+            _partitionKey = [decoder decodeObjectForKey:AZSCTableEntityPartitionKey];
+        }
+        
+        if ([decoder containsValueForKey:AZSCTableEntityRowKey]) {
+            _rowKey = [decoder decodeObjectForKey:AZSCTableEntityRowKey];
+        }
+        
         _properties = [decoder decodeObjectForKey:AZSCTableEntityProperties];
-        _etag = [decoder decodeObjectForKey:AZSCTableEntityEtag];
-        _timestamp = [decoder decodeObjectForKey:AZSCTableEntityTimestamp];
+        
+        if ([decoder containsValueForKey:AZSCTableEntityEtag]) {
+            _etag = [decoder decodeObjectForKey:AZSCTableEntityEtag];
+        }
+        
+        if ([decoder containsValueForKey:AZSCTableEntityTimestamp]) {
+            _timestamp = [decoder decodeObjectForKey:AZSCTableEntityTimestamp];
+        }
     }
     
     return self;
@@ -63,8 +75,14 @@
 - (void) encodeWithCoder:(NSCoder *)encoder
 {
     [encoder encodeObject:self.properties forKey:AZSCTableEntityProperties];
-    [encoder encodeObject:self.partitionKey forKey:AZSCTableEntityPartitionKey];
-    [encoder encodeObject:self.rowKey forKey:AZSCTableEntityRowKey];
+    
+    if (self.partitionKey.length > 0) {
+        [encoder encodeObject:self.partitionKey forKey:AZSCTableEntityPartitionKey];
+    }
+    
+    if (self.rowKey.length > 0) {
+        [encoder encodeObject:self.rowKey forKey:AZSCTableEntityRowKey];
+    }
 }
 
 - (BOOL) isEqual:(id)ent

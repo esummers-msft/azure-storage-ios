@@ -26,8 +26,11 @@
 
 @interface AZSCoder()
 
-// Maps each property name to @[AZSEdmType, property value]
+// Maps each property name to its value
 @property(strong) NSMutableDictionary *properties;
+
+// Maps each property name to its AZSEdmType
+@property(strong) NSMutableDictionary *edmTypes;
 
 // This is a map from property value to the keys with which it has been conditionally encoded
 @property(strong) NSMutableDictionary *conditionals;
@@ -41,11 +44,64 @@
 
 -(instancetype)init
 {
+    return (self = [self initWithJsonDictionary:nil]);
+}
+
+-(instancetype)initWithJsonDictionary:(NSDictionary *)dict {
     self = [super init];
     if (self) {
         _properties = [NSMutableDictionary dictionaryWithCapacity:2];
+        _edmTypes = [NSMutableDictionary dictionaryWithCapacity:2];
         _conditionals = [NSMutableDictionary dictionary];
         _binaries = [NSMutableDictionary dictionary];
+        
+        if (dict) {
+            NSDictionary *typesMap = @{@"Edm.Binary" : @(AZSEdmBinary), @"Edm.DateTime" : @(AZSEdmDateTime), @"Edm.Guid" : @(AZSEdmGuid), @"Edm.Int64" : @(AZSEdmInt64)};
+            
+            for (NSString* key in dict) {
+                if ([key isEqualToString:@"odata.metadata"] || [key isEqualToString:@"odata.etag"] || [key isEqualToString:@"odata.editLink"]) {
+                    continue;
+                }
+                else {
+                    NSArray *split = [key componentsSeparatedByString:@"@"];
+                    if (split.count > 1) {
+                        if (split.count == 2 && [split[1] isEqualToString:@"odata.type"]) {
+                            _edmTypes[split[0]] = typesMap[dict[key]];
+                            
+                            if ([_properties[split[0]] respondsToSelector:@selector(stringValue)]) {
+                                _properties[split[0]] = [_properties[split[0]] stringValue];
+                            }
+                        }
+                        else {
+                            // Error
+                        }
+                    }
+                    else {
+                        if (!_edmTypes[key]) {
+                            if ([dict[key] respondsToSelector:@selector(objCType)]) {
+                                NSString *type = [NSString stringWithCString: [dict[key] objCType] encoding:NSUTF8StringEncoding];
+                                if ([type isEqualToString:@"c"]) {
+                                    _edmTypes[key] = @(AZSEdmBoolean);
+                                }
+                                else if ([type isEqualToString:@"d"]) {
+                                    _edmTypes[key] = @(AZSEdmDouble);
+                                }
+                                else if ([type isEqualToString:@"q"]) {
+                                    _edmTypes[key] = @(AZSEdmInt32);
+                                } else {
+                                    // Error
+                                }
+                            }
+                            else {
+                                _edmTypes[key] = @(AZSEdmString);
+                            }
+                        }
+                        
+                        _properties[key] = dict[key];
+                    }
+                }
+            }
+        }
         
         static dispatch_once_t once;
         dispatch_once(&once, ^() {
@@ -93,11 +149,20 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
     return NULL;
 }
 
+-(BOOL)containsValueForKey:(NSString *)key
+{
+    if (!_codingError) {
+        return self.properties[key] != nil;
+    }
+    
+    return nil;
+}
+
 -(BOOL)decodeBoolForKey:(NSString *)key
 {
     if (!_codingError) {
-        if (([self.properties[key][0] intValue] == AZSEdmBoolean)) {
-            return [self.properties[key][1] boolValue];
+        if (([self.edmTypes[key] intValue] == AZSEdmBoolean)) {
+            return [self.properties[key] boolValue];
         }
     
         _codingError = [NSError errorWithDomain:AZSErrorDomain code:AZSEParseError userInfo:nil];
@@ -109,10 +174,9 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 -(const uint8_t *)decodeBytesForKey:(NSString *)key returnedLength:(NSUInteger *)lengthp
 {
     if (!_codingError) {
-        NSArray *property = self.properties[key];
-        if ([property[0] intValue] == AZSEdmBinary) {
+        if ([self.edmTypes[key] intValue] == AZSEdmBinary) {
             if (!self.binaries[key]) {
-                self.binaries[key] = [[NSData alloc] initWithBase64EncodedString:property[1] options:0];
+                self.binaries[key] = [[NSData alloc] initWithBase64EncodedString:self.properties[key] options:0];
             }
             
             NSData *data = self.binaries[key];
@@ -130,8 +194,8 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 -(double)decodeDoubleForKey:(NSString *)key
 {
     if (!_codingError) {
-        if ([self.properties[key][0] intValue] == AZSEdmDouble) {
-            return [self.properties[key][1] doubleValue];
+        if ([self.edmTypes[key] intValue] == AZSEdmDouble) {
+            return [self.properties[key] doubleValue];
         }
     
         _codingError = [NSError errorWithDomain:AZSErrorDomain code:AZSEParseError userInfo:nil];
@@ -143,8 +207,8 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 -(float)decodeFloatForKey:(NSString *)key
 {
     if (!_codingError) {
-        if ([self.properties[key][0] intValue] == AZSEdmDouble) {
-            return [self.properties[key][1] floatValue];
+        if ([self.edmTypes[key] intValue] == AZSEdmDouble) {
+            return [self.properties[key] floatValue];
         }
     
         _codingError = [NSError errorWithDomain:AZSErrorDomain code:AZSEParseError userInfo:nil];
@@ -161,8 +225,8 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 -(int32_t)decodeInt32ForKey:(NSString *)key
 {
     if (!_codingError) {
-        if ([self.properties[key][0] intValue] == AZSEdmInt32) {
-            return (int)[self.properties[key][1] integerValue];
+        if ([self.edmTypes[key] intValue] == AZSEdmInt32) {
+            return (int)[self.properties[key] integerValue];
         }
     
         _codingError = [NSError errorWithDomain:AZSErrorDomain code:AZSEParseError userInfo:nil];
@@ -174,8 +238,8 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 -(int64_t)decodeInt64ForKey:(NSString *)key
 {
     if (!_codingError) {
-        if ([self.properties[key][0] intValue] == AZSEdmInt64) {
-            return [self.properties[key][1] longLongValue];
+        if ([self.edmTypes[key] intValue] == AZSEdmInt64) {
+            return [self.properties[key] longLongValue];
         }
     
         _codingError = [NSError errorWithDomain:AZSErrorDomain code:AZSEParseError userInfo:nil];
@@ -191,8 +255,28 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 
 -(id)decodeObjectForKey:(NSString *)key
 {
+    if ([key isEqualToString:AZSCTableEntityPropertiesInternal]) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:(2 * self.properties.count)];
+        for (NSString *k in self.properties) {
+            AZSEdmType type = [self.edmTypes[k] integerValue];
+            if (type == AZSEdmDateTime) {
+                dict[[NSString stringWithFormat:@"%@@odata.type", k]] = @"Edm.DateTime";
+            }
+            else if (type == AZSEdmGuid) {
+                dict[[NSString stringWithFormat:@"%@@odata.type", k]] = @"Edm.Guid";
+            }
+            else if (type == AZSEdmInt64) {
+                dict[[NSString stringWithFormat:@"%@@odata.type", k]] = @"Edm.Int64";
+            }
+            
+            dict[k] = self.properties[k];
+        }
+        
+        return dict;
+    }
     // Dictionary
-    if ([key isEqualToString:AZSCTableEntityProperties]) {
+    else if ([key isEqualToString:AZSCTableEntityProperties]) {
+        // TODO: Test this to ensure pk/rk don't end up in a DTE's property dictionary
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:self.properties.count];
         for (NSString *k in self.properties) {
             if (![k isEqualToString:AZSCTableEntityPartitionKey] && ![k isEqualToString:AZSCTableEntityRowKey]) {
@@ -203,37 +287,37 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
         return dict;
     }
     // DateTime
-    else if ([self.properties[key][0] intValue] == AZSEdmDateTime) {
-        return [AZSUtil dateFromRoundtripFormat:self.properties[key][1]];
+    else if ([self.edmTypes[key] intValue] == AZSEdmDateTime) {
+        return [AZSUtil dateFromRoundtripFormat:self.properties[key]];
     }
     // Binary
-    else if ([self.properties[key][0] intValue] == AZSEdmBinary) {
+    else if ([self.edmTypes[key] intValue] == AZSEdmBinary) {
         NSUInteger length;
         return [[NSData alloc] initWithBytes:[self decodeBytesForKey:key returnedLength:&length] length:length];
     }
     // Guid
-    else if ([self.properties[key][0] intValue] == AZSEdmGuid) {
-        return [[NSUUID alloc] initWithUUIDString:self.properties[key][1]];
+    else if ([self.edmTypes[key] intValue] == AZSEdmGuid) {
+        return [[NSUUID alloc] initWithUUIDString:self.properties[key]];
     }
     // String
-    else if ([self.properties[key][0] intValue] == AZSEdmString) {
-        return self.properties[key][1];
+    else if ([self.edmTypes[key] intValue] == AZSEdmString) {
+        return self.properties[key];
     }
     // Int32
-    else if ([self.properties[key][0] intValue] == AZSEdmInt32) {
-        return self.properties[key][1];
+    else if ([self.edmTypes[key] intValue] == AZSEdmInt32) {
+        return self.properties[key];
     }
     // Int 64
-    else if ([self.properties[key][0] intValue] == AZSEdmInt64) {
-        return @([self.properties[key][1] longLongValue]);
+    else if ([self.edmTypes[key] intValue] == AZSEdmInt64) {
+        return @([self.properties[key] longLongValue]);
     }
     // Double
-    else if ([self.properties[key][0] intValue] == AZSEdmDouble) {
-        return self.properties[key][1];
+    else if ([self.edmTypes[key] intValue] == AZSEdmDouble) {
+        return self.properties[key];
     }
     // Boolean
-    else if ([self.properties[key][0] intValue] == AZSEdmBoolean) {
-        return self.properties[key][1];
+    else if ([self.edmTypes[key] intValue] == AZSEdmBoolean) {
+        return self.properties[key];
     }
     // Invalid Type
     else if (![key isEqualToString:AZSCTableEntityEtag] && ![key isEqualToString:AZSCTableEntityTimestamp]) {
@@ -245,7 +329,8 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 
 -(void)encodeBool:(BOOL)boolv forKey:(NSString *)key
 {
-    self.properties[key] = @[@(AZSEdmBoolean), @(boolv)];
+    self.edmTypes[key] = @(AZSEdmBoolean);
+    self.properties[key] = @(boolv);
 }
 
 -(void)encodeBytes:(const uint8_t *)bytesp length:(NSUInteger)lenv forKey:(NSString *)key
@@ -256,7 +341,8 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 
 -(void)encodeDouble:(double)realv forKey:(NSString *)key
 {
-    self.properties[key] = @[@(AZSEdmDouble), @(realv)];
+    self.edmTypes[key] = @(AZSEdmDouble);
+    self.properties[key] = @(realv);
 }
 
 -(void)encodeFloat:(float)realv forKey:(NSString *)key
@@ -271,12 +357,14 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
 
 -(void)encodeInt32:(int32_t)intv forKey:(NSString *)key
 {
-    self.properties[key] = @[@(AZSEdmInt32), @(intv)];
+    self.edmTypes[key] = @(AZSEdmInt32);
+    self.properties[key] = @(intv);
 }
 
 -(void)encodeInt64:(int64_t)intv forKey:(NSString *)key
 {
-    self.properties[key] = @[@(AZSEdmInt64), [NSString stringWithFormat:@"%lld", intv]];
+    self.edmTypes[key] = @(AZSEdmInt64);
+    self.properties[key] = [NSString stringWithFormat:@"%lld", intv];
 }
 
 -(void)encodeInteger:(NSInteger)intv forKey:(NSString *)key
@@ -317,12 +405,14 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
     
     // DateTime
     if ([object isKindOfClass:[NSDate class]]) {
-        self.properties[key] = @[@(AZSEdmDateTime), [AZSUtil convertDateToRoundtripFormat:object]];
+        self.edmTypes[key] = @(AZSEdmDateTime);
+        self.properties[key] = [AZSUtil convertDateToRoundtripFormat:object];
     }
     // Binary
     else if ([object isKindOfClass:[NSData class]]) {
         self.binaries[key] = nil;
-        self.properties[key] = @[@(AZSEdmBinary), [object base64EncodedStringWithOptions:0]];
+        self.edmTypes[key] = @(AZSEdmBinary);
+        self.properties[key] = [object base64EncodedStringWithOptions:0];
     }
     // Int32, Int 64, Double, Boolean
     else if ([object isKindOfClass:[NSNumber class]]) {
@@ -351,11 +441,13 @@ void* unimplementedDecodeIMP(id self, SEL _cmd)
     }
     // Guid
     else if ([object isKindOfClass:[NSUUID class]]) {
-        self.properties[key] = @[@(AZSEdmGuid), [object UUIDString]];
+        self.edmTypes[key] = @(AZSEdmGuid);
+        self.properties[key] = [object UUIDString];
     }
     // String
     else if ([object isKindOfClass:[NSString class]]) {
-        self.properties[key] = @[@(AZSEdmString), object];
+        self.edmTypes[key] = @(AZSEdmString);
+        self.properties[key] = object;
     }
     // Dictionary (must have key = AZSCTableEntityProperties)
     else if ([object isKindOfClass:[NSDictionary class]] && [key isEqualToString:AZSCTableEntityProperties]) {

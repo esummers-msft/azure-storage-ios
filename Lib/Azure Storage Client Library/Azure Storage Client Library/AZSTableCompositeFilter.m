@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------------------
-// <copyright file="AZSCoder.h" company="Microsoft">
+// <copyright file="AZSTableCompositeFilter.m" company="Microsoft">
 //    Copyright 2016 Microsoft Corporation
 //
 //    Licensed under the MIT License;
@@ -15,25 +15,22 @@
 // </copyright>
 // -----------------------------------------------------------------------------------------
 
-#import <Foundation/Foundation.h>
-#import "AZSEnums.h"
-#import "AZSMacros.h"
+#import "AZSTableFilter.m"
 
-@interface AZSCoder : NSCoder
+@interface AZSTableCompositeFilter()
 
-@property(strong, readonly) NSError *codingError;
+@end
 
-/** Conditionally encodes a reference to the object and associates it with the
- key only if the object was previously or is later encoded unconditionally.
- Note: The object's isEqual: method is used to determine whether it has been
- encoded unconditionally.
- 
- @param object The object to conditionally encode.
- @param key The key to associate object with.
- */
--(void)encodeConditionalObject:(id)object forKey:(NSString *)key;
+@implementation AZSTableCompositeFilter
 
--(instancetype)init;
--(instancetype)initWithJsonDictionary:(NSDictionary *)dict AZS_DESIGNATED_INITIALIZER;
+- (AZSTableCompositeFilterOperator) operation
+{
+    return (AZSTableCompositeFilterOperator) super.operation;
+}
+
+- (void) setOperation:(NSInteger)operation
+{
+    super.operation = operation;
+}
 
 @end

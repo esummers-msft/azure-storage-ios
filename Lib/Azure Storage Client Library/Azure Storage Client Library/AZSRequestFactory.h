@@ -20,7 +20,7 @@
 
 @interface AZSRequestFactory : NSObject
 
-
++(NSMutableURLRequest *) postRequestWithUrlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout;
 +(NSMutableURLRequest *) putRequestWithUrlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout;
 +(NSMutableURLRequest *) getRequestWithUrlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout;
 +(NSMutableURLRequest *) headRequestWithUrlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout;
@@ -32,7 +32,7 @@
 +(void)applySourceAccessConditionToRequest:(NSMutableURLRequest*)request condition:(AZSAccessCondition*)condition;
 +(void)applyLeaseIdToRequest:(NSMutableURLRequest*)request condition:(AZSAccessCondition*)condition;
 
-+(NSString *) appendToQuery:(NSString *)query stringToAppend:(NSString *) appendString;
-
++(NSString *) appendToQuery:(NSString *)query stringToAppend:(NSString *)appendString;
++(NSString *) appendToPath:(NSString *)path stringToAppend:(NSString *)appendString;
 
 @end

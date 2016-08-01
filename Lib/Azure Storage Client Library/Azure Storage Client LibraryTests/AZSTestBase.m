@@ -81,7 +81,13 @@
 
 - (void)checkPassageOfError:(NSError *)err expectToPass:(BOOL)expected expectedHttpErrorCode:(int)code message:(NSString *)message
 {
-    int badCode = [err.userInfo[AZSCHttpStatusCode] intValue];
+    int badCode;
+    NSError *temp = err;
+    do {
+        badCode = [temp.userInfo[AZSCHttpStatusCode] intValue];
+        temp = temp.userInfo[@"InnerError"];
+    } while (temp && badCode < 100);
+    
     if (expected) {
         XCTAssertNil(err, @"%@ failed.", message);
     }

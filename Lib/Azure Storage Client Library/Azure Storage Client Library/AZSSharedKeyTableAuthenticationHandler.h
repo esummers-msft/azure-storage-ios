@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------------------
-// <copyright file="AZSCoder.h" company="Microsoft">
+// <copyright file="AZSSharedKeyTableAuthenticationHandler.h" company="Microsoft">
 //    Copyright 2016 Microsoft Corporation
 //
 //    Licensed under the MIT License;
@@ -16,24 +16,15 @@
 // -----------------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import "AZSEnums.h"
+#import "AZSAuthenticationHandler.h"
 #import "AZSMacros.h"
 
-@interface AZSCoder : NSCoder
+@class AZSStorageCredentials;
 
-@property(strong, readonly) NSError *codingError;
+@interface AZSSharedKeyTableAuthenticationHandler : NSObject<AZSAuthenticationHandler>
 
-/** Conditionally encodes a reference to the object and associates it with the
- key only if the object was previously or is later encoded unconditionally.
- Note: The object's isEqual: method is used to determine whether it has been
- encoded unconditionally.
- 
- @param object The object to conditionally encode.
- @param key The key to associate object with.
- */
--(void)encodeConditionalObject:(id)object forKey:(NSString *)key;
+@property (strong, readonly, nonatomic) AZSStorageCredentials *storageCredentials;
 
--(instancetype)init;
--(instancetype)initWithJsonDictionary:(NSDictionary *)dict AZS_DESIGNATED_INITIALIZER;
+-(instancetype) initWithStorageCredentials:(AZSStorageCredentials *)storageCredentials AZS_DESIGNATED_INITIALIZER;
 
 @end

@@ -409,3 +409,45 @@ typedef NS_ENUM(NSInteger, AZSSequenceNumberOperator)
     /** Specifies that the request should only complete if the sequence number on the blob is equal to the sequence number in the access condition.*/
     AZSSequenceNumberOperatorEqualTo
 };
+
+/** The type of filter used in a table query. */
+typedef NS_ENUM(NSInteger, AZSTableFilterOperator)
+{
+    /** The property equals the given value. */
+    AZSTableFilterOperatorEqual = 0,
+    
+    /** The property is greater than the given value. */
+    AZSTableFilterOperatorGreaterThan = 1,
+    
+    /** The property is greater than or equal to the given value. */
+    AZSTableFilterOperatorGreaterThanOrEqual = 2,
+    
+    /** The property is less than the given value. */
+    AZSTableFilterOperatorLessThan = 3,
+    
+     /** The property is less than or equal to the given value. */
+    AZSTableFilterOperatorLessThanOrEqual = 4,
+    
+     /** The property does not equal the given value. */
+    AZSTableFilterOperatorNotEqual = 5
+};
+
+/** The type of filter used in a table query. */
+typedef NS_ENUM(NSInteger, AZSTableCompositeFilterOperator)
+{
+    /** These two filters must both hold. */
+    AZSTableFilterOperatorAnd = 6,
+    
+    /** This filter is negated. */
+    AZSTableFilterOperatorNot = 7,
+    
+    /** Either of these two filters must hold. */
+    AZSTableFilterOperatorOr = 8
+};
+
+typedef NS_ENUM(NSInteger, AZSMetadataLevel)
+{
+    AZSMetadataLevelMinimal,
+    
+    AZSMetadataLevelNone
+};

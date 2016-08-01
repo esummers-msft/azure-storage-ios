@@ -45,3 +45,7 @@
 }
 
 @end
+
+@implementation AZSTableResultSegment
+
+@end

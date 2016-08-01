@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------------------
-// <copyright file="AZSCoder.h" company="Microsoft">
+// <copyright file="AZSTableRequestOptions.m" company="Microsoft">
 //    Copyright 2016 Microsoft Corporation
 //
 //    Licensed under the MIT License;
@@ -18,22 +18,21 @@
 #import <Foundation/Foundation.h>
 #import "AZSEnums.h"
 #import "AZSMacros.h"
+#import "AZSTableRequestOptions.h"
 
-@interface AZSCoder : NSCoder
+@interface AZSTableRequestOptions()
+@end
 
-@property(strong, readonly) NSError *codingError;
+@implementation AZSTableRequestOptions
 
-/** Conditionally encodes a reference to the object and associates it with the
- key only if the object was previously or is later encoded unconditionally.
- Note: The object's isEqual: method is used to determine whether it has been
- encoded unconditionally.
- 
- @param object The object to conditionally encode.
- @param key The key to associate object with.
- */
--(void)encodeConditionalObject:(id)object forKey:(NSString *)key;
+-(instancetype)init
+{
+    return (self = [super init]);
+}
 
--(instancetype)init;
--(instancetype)initWithJsonDictionary:(NSDictionary *)dict AZS_DESIGNATED_INITIALIZER;
+-(instancetype)applyDefaultsFromOptions:(AZSTableRequestOptions *)sourceOptions
+{
+    return self;
+}
 
 @end

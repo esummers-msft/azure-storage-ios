@@ -22,6 +22,7 @@
 
 // Miscellaneous
 FOUNDATION_EXPORT NSString *const AZSCBlob;
+FOUNDATION_EXPORT NSString *const AZSCTable;
 FOUNDATION_EXPORT NSString *const AZSCCode;
 FOUNDATION_EXPORT NSString *const AZSCContainer;
 FOUNDATION_EXPORT NSString *const AZSCDateFormatColloquial;
@@ -48,6 +49,7 @@ FOUNDATION_EXPORT NSString *const AZSCBlobPageBlob;
 FOUNDATION_EXPORT NSString *const AZSCTableEntityEtag;
 FOUNDATION_EXPORT NSString *const AZSCTableEntityTimestamp;
 FOUNDATION_EXPORT NSString *const AZSCTableEntityProperties;
+FOUNDATION_EXPORT NSString *const AZSCTableEntityPropertiesInternal;
 FOUNDATION_EXPORT NSString *const AZSCTableEntityPartitionKey;
 FOUNDATION_EXPORT NSString *const AZSCTableEntityRowKey;
 
@@ -71,6 +73,7 @@ FOUNDATION_EXPORT NSString *const AZSCEmulatorAccount;
 FOUNDATION_EXPORT NSString *const AZSCEmulatorAccountKey;
 
 // Headers
+FOUNDATION_EXPORT NSString *const AZSCAccept;
 FOUNDATION_EXPORT NSString *const AZSCContentCacheControl;
 FOUNDATION_EXPORT NSString *const AZSCContentDisposition;
 FOUNDATION_EXPORT NSString *const AZSCContentEncoding;
@@ -162,6 +165,7 @@ FOUNDATION_EXPORT NSString *const AZSCHeaderValueUserAgent;
 FOUNDATION_EXPORT NSString *const AZSCHttpDelete;
 FOUNDATION_EXPORT NSString *const AZSCHttpHead;
 FOUNDATION_EXPORT NSString *const AZSCHttpGet;
+FOUNDATION_EXPORT NSString *const AZSCHttpPost;
 FOUNDATION_EXPORT NSString *const AZSCHttpPut;
 
 // Query Parameters

@@ -22,6 +22,16 @@
 @implementation AZSRequestFactory
 
 // TODO: Make a helper method for all these.  Remove UA string setting (or move the version in executor to here.)
+
++(NSMutableURLRequest *) postRequestWithUrlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout
+{
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[urlComponents URL] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:timeout];
+    [request setHTTPMethod:AZSCHttpPost];
+    [request setValue:AZSCTargetStorageVersion forHTTPHeaderField:AZSCHeaderVersion];
+    
+    return request;
+}
+
 +(NSMutableURLRequest *) putRequestWithUrlComponents:(NSURLComponents *)urlComponents timeout:(NSTimeInterval)timeout
 {
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[urlComponents URL] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:timeout];
@@ -111,13 +121,25 @@
 // TODO: Consider using NSMutableString* for better perf if necessary
 +(NSString *) appendToQuery:(NSString *)query stringToAppend:(NSString *) appendString
 {
-    if (query == nil)
+    if (query)
     {
-        return appendString;
+        return [query stringByAppendingString:[NSString stringWithFormat:@"&%@", appendString]];
     }
     else
     {
-        return [query stringByAppendingString:[NSString stringWithFormat:@"&%@",appendString]];
+        return appendString;
+    }
+}
+
++(NSString *) appendToPath:(NSString *)path stringToAppend:(NSString *)appendString
+{
+    if (path)
+    {
+        return [path stringByAppendingString:[NSString stringWithFormat:@"(%@)", appendString]];
+    }
+    else
+    {
+        return appendString;
     }
 }
 

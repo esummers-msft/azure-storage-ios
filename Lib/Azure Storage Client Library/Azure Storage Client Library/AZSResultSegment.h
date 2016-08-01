@@ -82,4 +82,10 @@ AZS_ASSUME_NONNULL_BEGIN
 
 @end
 
+/** An AZSResultSegment that contains AZSCloudTable objects, the result of a ListTablesSegmented operation.
+ */
+@interface AZSTableResultSegment : AZSResultSegment
+
+@end
+
 AZS_ASSUME_NONNULL_END

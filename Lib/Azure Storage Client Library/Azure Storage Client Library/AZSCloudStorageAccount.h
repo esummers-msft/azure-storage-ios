@@ -22,6 +22,7 @@
 @class AZSSharedAccessAccountParameters;
 @class AZSStorageCredentials;
 @class AZSStorageUri;
+@class AZSCloudTableClient;
 
 /** AZSCloudStorageAccount represents a given Storage Account.
  
@@ -80,6 +81,12 @@
  @return The freshly created AZSCloudBlobClient.
  */
 -(AZSCloudBlobClient *)getBlobClient;
+
+/** Create an AZSCloudTableClient object
+ 
+ @return The freshly created AZSCloudTableClient.
+ */
+-(AZSCloudTableClient *)getTableClient;
 
 // TODO: Remainder of the account-parsing options.
 
